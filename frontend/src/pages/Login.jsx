@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ username: '', password: '' });
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -13,10 +13,23 @@ const Login = () => {
     try {
       const response = await axiosInstance.post('/api/auth/login', formData);
       login(response.data);
-      navigate('/tasks');
-    } catch (error) {
-      alert('Login failed. Please try again.');
+      navigate('/bookings');
     }
+
+
+
+    catch (error) {
+      console.error('LOGIN ERROR:', error);
+      console.error('RESPONSE DATA:', error.response?.data);
+      alert(error.response?.data?.message || error.response?.data || 'Login failed');
+    }
+
+    // catch (error) {
+    //   alert('Login failed. Please try again.');
+    // }
+
+
+
   };
 
   return (
@@ -24,10 +37,10 @@ const Login = () => {
       <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
         <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
         <input
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          type="text"
+          placeholder="username"
+          value={formData.Username}
+          onChange={(e) => setFormData({ ...formData, username: e.target.value })}
           className="w-full mb-4 p-2 border rounded"
         />
         <input

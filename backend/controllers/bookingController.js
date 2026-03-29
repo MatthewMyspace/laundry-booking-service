@@ -23,7 +23,7 @@ const createBooking = async (req, res) => {
         });
 
         res.status(201).json(booking);
-        
+
     } catch (error) {
         res.status(500).json({
             message: "Booking validation failed",
@@ -35,38 +35,78 @@ const createBooking = async (req, res) => {
 };
 
 //Get by ID
+// GET by ID
 const getBookingById = async (req, res) => {
     try {
-        const booking = await Booking.findOne({
-            _id: req.params.id,
-            userId: req.user.id
-        });
+        const booking = await Booking.findById(req.params.id);
 
         if (!booking) {
             return res.status(404).json({ message: 'Booking not found' });
         }
 
+        //
+        if (req.user.role !== 'admin' && booking.userId.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Not authorized' });
+        }
+
         res.status(200).json(booking);
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+// const getBookingById = async (req, res) => {
+//     try {
+//         const booking = await Booking.findOne({
+//             _id: req.params.id,
+//             userId: req.user.id
+//         });
+
+//         if (!booking) {
+//             return res.status(404).json({ message: 'Booking not found' });
+//         }
+
+//         res.status(200).json(booking);
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// };
 
 
 // READ - booking of user
 const getBookings = async (req, res) => {
     try {
-        const bookings = await Booking.find({ userId: req.user.id })
-            .sort({ createdAt: -1 });
+        let bookings;
+
+        if (req.user.role === 'admin') {
+            bookings = await Booking.find().sort({ createdAt: -1 });
+        } else {
+            bookings = await Booking.find({ userId: req.user.id }).sort({ createdAt: -1 });
+        }
+
         res.status(200).json(bookings);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+// const getBookings = async (req, res) => {
+//     try {
+//         const bookings = await Booking.find({ userId: req.user.id })
+//             .sort({ createdAt: -1 });
+//         res.status(200).json(bookings);
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// };
 
 // UPDATE - 
 const updateBooking = async (req, res) => {
     try {
+        // admin only
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Only admin can update booking status' });
+        }
+
         const booking = await Booking.findById(req.params.id);
 
         if (!booking) {
@@ -81,22 +121,42 @@ const updateBooking = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+// const updateBooking = async (req, res) => {
+//     try {
+//         const booking = await Booking.findById(req.params.id);
+
+//         if (!booking) {
+//             return res.status(404).json({ message: 'Booking not found' });
+//         }
+
+//         booking.status = req.body.status || booking.status;
+//         const updatedBooking = await booking.save();
+
+//         res.status(200).json(updatedBooking);
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// };
 
 
 // DELETE
+// DELETE
 const deleteBooking = async (req, res) => {
     try {
-        const booking = await Booking.findOne({
-            _id: req.params.id,
-            userId: req.user.id
-        });
+        const booking = await Booking.findById(req.params.id);
 
         if (!booking) {
             return res.status(404).json({ message: 'Booking not found' });
         }
 
+        // Check
+        if (req.user.role !== 'admin' && booking.userId.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Not authorized' });
+        }
+
         await booking.deleteOne();
         res.status(200).json({ message: 'Booking cancelled successfully' });
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

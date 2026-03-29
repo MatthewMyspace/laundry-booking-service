@@ -1,15 +1,15 @@
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
 
-const TaskList = ({ tasks, setTasks, setEditingTask }) => {
+const TaskList = ({ Booking, setBooking, setEditingTask }) => {
   const { user } = useAuth();
 
   const handleDelete = async (taskId) => {
     try {
-      await axiosInstance.delete(`/api/tasks/${taskId}`, {
+      await axiosInstance.delete(`/api/Booking/${taskId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
-      setTasks(tasks.filter((task) => task._id !== taskId));
+      setBooking(Booking.filter((task) => task._id !== taskId));
     } catch (error) {
       alert('Failed to delete task.');
     }
@@ -17,7 +17,7 @@ const TaskList = ({ tasks, setTasks, setEditingTask }) => {
 
   return (
     <div>
-      {tasks.map((task) => (
+      {Booking.map((task) => (
         <div key={task._id} className="bg-gray-100 p-4 mb-4 rounded shadow">
           <h2 className="font-bold">{task.title}</h2>
           <p>{task.description}</p>
