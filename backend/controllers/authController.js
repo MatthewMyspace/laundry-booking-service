@@ -8,24 +8,24 @@ const generateToken = (id) => {
 };
 
 const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { firstName, lastName, username, email, mobileNumber, password, address, postalCode, role } = req.body;
     try {
-        const userExists = await User.findOne({ email });
+        const userExists = await User.findOne({ email }, {username});
         if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-        const user = await User.create({ name, email, password });
-        res.status(201).json({ id: user.id, name: user.name, email: user.email, token: generateToken(user.id) });
+        const user = await User.create({ firstName, lastName, username, email, mobileNumber, password, address, postalCode, role: role || 'user'  });
+        res.status(201).json({ id: user.id, firstName: user.firstName, username: user.username, email: user.email, role: user.role, token: generateToken(user.id) });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne ({ username });
         if (user && (await bcrypt.compare(password, user.password))) {
-            res.json({ id: user.id, name: user.name, email: user.email, token: generateToken(user.id) });
+            res.json({ id: user.id, firstName: user.firstName, lastName: user.lastName, username: user.username, email: user.email, role: user.role, token: generateToken(user.id) });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
         }
@@ -42,10 +42,13 @@ const getProfile = async (req, res) => {
       }
   
       res.status(200).json({
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
-        university: user.university,
+        mobileNumber: user.mobileNumber,
         address: user.address,
+        postalCode: user.postalCode,
+        role: user.role,
       });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
@@ -57,14 +60,17 @@ const updateUserProfile = async (req, res) => {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        const { name, email, university, address } = req.body;
-        user.name = name || user.name;
+        const { firstName, lastName, username, email, mobileNumber, address, postalCode } = req.body;
+        user.firstName = firstName || user.firstName;
+        user.lastName = lastName || user.lastName;
+        user.username = username || user.username;
         user.email = email || user.email;
-        user.university = university || user.university;
+        user.mobileNumber = mobileNumber || user.mobileNumber;
         user.address = address || user.address;
+        user.postalCode = postalCode || user.postalCode;
 
         const updatedUser = await user.save();
-        res.json({ id: updatedUser.id, name: updatedUser.name, email: updatedUser.email, university: updatedUser.university, address: updatedUser.address, token: generateToken(updatedUser.id) });
+        res.json({ id: updatedUser.id, firstName: updatedUser.firstName, lastName: updatedUser.lastName, username: updatedUser.username, email: updatedUser.email, mobileNumber: updatedUser.mobileNumber, address: updatedUser.address, postalCode: updatedUser.postalCode, role: updatedUser.role, token: generateToken(updatedUser.id) });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
