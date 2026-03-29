@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted   # 🔥 ใช้ EC2
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
