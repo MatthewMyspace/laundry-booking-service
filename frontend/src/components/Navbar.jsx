@@ -11,13 +11,19 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
-      <Link to="/" className="text-2xl font-bold">Your apps name</Link>
+    <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
+      <Link to="/" className="text-2xl font-bold">Laundry Booking Service</Link>
       <div>
         {user ? (
           <>
-            <Link to="/tasks" className="mr-4">CRUD</Link>
-            <Link to="/profile" className="mr-4">Profile</Link>
+            <Link to="/bookings" className="mr-4">HomeService</Link>
+            <Link to="/my-bookings" className="mr-4">MyBooking</Link>
+            <Link to="/profile" className="mr-4">MyProfile</Link>
+
+            {user.role === 'admin' && (
+            <Link to="/admin/bookings" className="mr-4">Admin</Link>
+            )}
+          
             <button
               onClick={handleLogout}
               className="bg-red-500 px-4 py-2 rounded hover:bg-red-700"
