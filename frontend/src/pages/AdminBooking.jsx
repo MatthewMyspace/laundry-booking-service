@@ -6,19 +6,19 @@ const AdminBooking = () => {
   const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
 
-  const fetchBookings = async () => {
-    try {
-      const response = await axiosInstance.get('/api/bookings', {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
-      setBookings(response.data);
-    } catch (error) {
-      console.error(error);
-      alert(error.response?.data?.message || 'Failed to fetch bookings.');
-    }
-  };
-
   useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await axiosInstance.get('/api/bookings', {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        setBookings(response.data);
+      } catch (error) {
+        console.error(error);
+        alert(error.response?.data?.message || 'Failed to fetch bookings.');
+      }
+    };
+
     if (user?.token) {
       fetchBookings();
     }
