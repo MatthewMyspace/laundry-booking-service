@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="images/background.png" width="800" />
+</p>
+
 # 🧺 Laundry Booking Service
 
 > A web application that allows customers to book laundry services online — built with a modern full-stack setup and automated deployment on AWS.
