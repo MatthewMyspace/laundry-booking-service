@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="images/background.png" width="800" />
+    <img src="images/background.png" width="1000" />
 </p>
 
 # 🧺 Laundry Booking Service
