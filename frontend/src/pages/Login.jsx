@@ -39,7 +39,7 @@ const Login = () => {
         <input
           type="text"
           placeholder="username"
-          value={formData.Username}
+          value={formData.username}
           onChange={(e) => setFormData({ ...formData, username: e.target.value })}
           className="w-full mb-4 p-2 border rounded"
         />
