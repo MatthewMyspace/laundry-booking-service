@@ -49,7 +49,7 @@ const Navbar = () => {
             </Link>
 
             <Link to="/my-bookings" className="mr-4">
-              My Booking
+              My Bookings
             </Link>
 
             <Link to="/payment-methods" className="mr-4">
