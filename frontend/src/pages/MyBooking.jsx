@@ -50,11 +50,13 @@ const MyBooking = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 max-w-3xl">
       <h1 className="text-3xl font-bold mb-6">My Bookings</h1>
 
       {bookings.length === 0 ? (
-        <p>No bookings found.</p>
+        <div className="text-center text-gray-500 py-10">
+          No created booking yet
+        </div>
       ) : (
         bookings.map((booking) => {
           const payment = getPaymentForBooking(booking._id);

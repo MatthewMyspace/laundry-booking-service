@@ -32,12 +32,12 @@ const Payment = () => {
     navigate(`/payment/success/${payment._id}`);
   };
 
-  if (loading) return <div className="container mx-auto p-6">Loading booking...</div>;
-  if (error) return <div className="container mx-auto p-6 text-red-600">{error}</div>;
+  if (loading) return <div className="container mx-auto p-6 max-w-3xl">Loading booking...</div>;
+  if (error) return <div className="container mx-auto p-6 max-w-3xl text-red-600">{error}</div>;
   if (!booking) return null;
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 max-w-3xl">
       <PaymentForm booking={booking} onSuccess={handleSuccess} />
     </div>
   );

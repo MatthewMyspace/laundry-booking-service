@@ -25,7 +25,7 @@ const PaymentSuccess = () => {
   if (!payment) return <div className="container mx-auto p-6">Loading receipt...</div>;
 
   return (
-    <div className="container mx-auto p-6 max-w-md">
+    <div className="container mx-auto p-6 max-w-3xl">
       <div className="bg-white rounded-lg shadow-md p-6 text-center">
         <div className="w-16 h-16 mx-auto bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl mb-4">
           &#10003;

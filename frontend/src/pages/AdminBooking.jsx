@@ -62,7 +62,7 @@ const AdminBooking = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 max-w-3xl">
         <h2 className="text-3xl font-bold mb-6">Admin Management</h2>
 
         {bookings.length === 0 ? (

@@ -42,7 +42,7 @@ const Bookings = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 max-w-3xl">
       <h1 className="text-3xl font-bold mb-6">Book Your Laundry Service in Minutes</h1>
       <p className="text-gray-500 mb-2">Don't worry about your laundry — we'll handle it for you. Just fill in the details below to make a booking.</p>
 
