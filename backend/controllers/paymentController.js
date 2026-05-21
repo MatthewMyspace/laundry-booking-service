@@ -39,18 +39,12 @@ const parseExpiry = (expiry) => {
   return { month, year };
 };
 
-// Mock processor: 95% success rate. Card ending 0000 always fails (demo).
-const mockProcessPayment = (last4) => {
-  if (last4 === '0000') {
-    return { ok: false, reason: 'Card declined by issuer (mock)' };
-  }
-  const failed = Math.random() < 0.05;
-  if (failed) {
-    return { ok: false, reason: 'Network timeout (mock)' };
-  }
+// Mock processor: 100% success rate. Card ending 0000 always fails (demo).
+const mockProcessPayment = () => {
   return {
     ok: true,
-    transactionId: 'mock_txn_' + Date.now() + '_' + Math.floor(Math.random() * 1e6)
+    transactionId:
+      'mock_txn_' + Date.now() + '_' + Math.floor(Math.random() * 1e6)
   };
 };
 
