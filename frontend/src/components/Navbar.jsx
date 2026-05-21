@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import axiosInstance from '../axiosConfig';
 
 import { FaBell, FaUserCircle } from 'react-icons/fa';
 
@@ -12,11 +12,14 @@ const Navbar = () => {
 
   const fetchUnreadCount = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5001/api/notifications', {
+      const res = await axiosInstance.get('/api/notifications', {
         headers: { Authorization: `Bearer ${user.token}` }
       });
 
-      const unread = res.data.filter(n => !n.isRead).length;
+      const notifications = Array.isArray(res.data)
+        ? res.data
+        : (res.data?.notifications || []);
+      const unread = notifications.filter(n => !n.isRead).length;
       setUnreadCount(unread);
 
     } catch (error) {
