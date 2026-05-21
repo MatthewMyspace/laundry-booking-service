@@ -37,7 +37,6 @@ const createBooking = async (req, res) => {
 };
 
 //Get by ID
-// GET by ID
 const getBookingById = async (req, res) => {
     try {
         const booking = await Booking.findById(req.params.id);
@@ -46,8 +45,11 @@ const getBookingById = async (req, res) => {
             return res.status(404).json({ message: 'Booking not found' });
         }
 
-        //
-        if (req.user.role !== 'admin' && booking.userId.toString() !== req.user.id) {
+        // Check ownership
+        if (
+            req.user.role !== 'admin' &&
+            booking.userId.toString() !== req.user.id.toString()
+        ) {
             return res.status(403).json({ message: 'Not authorized' });
         }
 
@@ -151,7 +153,6 @@ const updateBooking = async (req, res) => {
 
 
 // DELETE
-// DELETE
 const deleteBooking = async (req, res) => {
     try {
         const booking = await Booking.findById(req.params.id);
@@ -160,13 +161,19 @@ const deleteBooking = async (req, res) => {
             return res.status(404).json({ message: 'Booking not found' });
         }
 
-        // Check
-        if (req.user.role !== 'admin' && booking.userId.toString() !== req.user.id) {
+        // Check ownership
+        if (
+            req.user.role !== 'admin' &&
+            booking.userId.toString() !== req.user.id.toString()
+        ) {
             return res.status(403).json({ message: 'Not authorized' });
         }
 
         await booking.deleteOne();
-        res.status(200).json({ message: 'Booking cancelled successfully' });
+
+        res.status(200).json({
+            message: 'Booking cancelled successfully'
+        });
 
     } catch (error) {
         res.status(500).json({ message: error.message });
