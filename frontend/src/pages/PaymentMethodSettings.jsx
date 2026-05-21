@@ -2,13 +2,6 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../axiosConfig';
 import { useAuth } from '../context/AuthContext';
 
-const brandColor = {
-  Visa: 'bg-blue-600',
-  Mastercard: 'bg-red-500',
-  Amex: 'bg-indigo-500',
-  Other: 'bg-gray-500'
-};
-
 const PaymentMethodSettings = () => {
   const { user } = useAuth();
   const [methods, setMethods] = useState([]);
