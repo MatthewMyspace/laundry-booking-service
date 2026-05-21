@@ -15,7 +15,7 @@ const Payment = () => {
   useEffect(() => {
     const fetchBooking = async () => {
       try {
-        const res = await axiosInstance.get(`/bookings/${bookingId}`, {
+        const res = await axiosInstance.get(`/api/bookings/${bookingId}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         setBooking(res.data);
