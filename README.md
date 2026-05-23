@@ -4,7 +4,7 @@
 
 # 🧺 Laundry Booking Service
 
-> A web application that allows customers to book laundry services online — built with a modern full-stack setup and automated deployment on AWS.
+> A full-stack web application that allows customers to book laundry services online — built with a modern tech stack and automated deployment on AWS.
 
 ---
 
@@ -15,7 +15,9 @@ Laundry Booking Service is a full-stack web application developed as part of **I
 The application allows users to:
 - Book laundry services online without calling or visiting a store
 - Choose from different service types, collection, and return methods
+- Save and manage payment methods
 - Track the status of their bookings in real time
+- Receive in-app notifications when booking status is updated
 
 Admins can:
 - View all bookings from all users
@@ -32,8 +34,10 @@ Admins can:
 | 📦 Create Booking | Book a laundry service with automatic price calculation |
 | 📋 View Bookings | See all your current and past bookings |
 | ❌ Cancel Booking | Cancel a booking you no longer need |
+| 💳 Payment Methods | Save, manage, and set default payment cards |
+| 💰 Process Payment | Pay for bookings using saved cards or Apple Pay |
+| 🔔 Notifications | Receive in-app notifications on booking status updates |
 | 🛠️ Admin Panel | Manage all bookings and update their status |
-| 💰 Auto Pricing | Price is calculated automatically based on service type and delivery options |
 
 ---
 
@@ -72,12 +76,15 @@ Admins can:
 - **React Router** — Page navigation
 - **Axios** — API communication
 - **Tailwind CSS** — Styling
+- **react-icons** — SVG icon library
 
 ### DevOps
 - **GitHub** — Version control with branching strategy
 - **GitHub Actions** — CI/CD pipeline automation
 - **AWS EC2** — Cloud server for deployment
+- **AWS Application Load Balancer** — Load balancing across two EC2 instances
 - **PM2** — Process manager to keep the app running
+- **Apache Benchmark** — Load testing
 - **Mocha + Chai + Sinon** — Unit testing
 
 ---
@@ -85,31 +92,68 @@ Admins can:
 ## 📁 Project Structure
 ```
 laundry-booking-service/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                        # GitHub Actions CI/CD pipeline
 ├── backend/
+│   ├── config/
+│   │   └── db.js                         # MongoDB connection (Singleton pattern)
 │   ├── controllers/
-│   │   └── bookingController.js   # CRUD logic for bookings
-│   ├── models/
-│   │   └── Booking.js             # MongoDB schema + price rules
-│   ├── routes/
-│   │   └── bookingRoutes.js       # API endpoints
+│   │   ├── authController.js             # Register, login, profile
+│   │   ├── bookingController.js          # Booking CRUD
+│   │   ├── notificationController.js     # Notification management
+│   │   ├── paymentController.js          # Payment processing (Facade pattern)
+│   │   └── paymentMethodController.js    # Payment method management
 │   ├── middleware/
-│   │   └── authMiddleware.js      # JWT authentication
+│   │   └── authMiddleware.js             # JWT authentication (Middleware pattern)
+│   ├── models/
+│   │   ├── Booking.js
+│   │   ├── Notification.js
+│   │   ├── Payment.js
+│   │   ├── PaymentMethod.js
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── bookingRoutes.js
+│   │   ├── notificationRoutes.js
+│   │   ├── paymentMethodRoutes.js
+│   │   └── paymentRoutes.js
+│   ├── services/
+│   │   ├── BaseService.js                # Base service class (MVC pattern)
+│   │   ├── BookingService.js
+│   │   ├── NotificationService.js
+│   │   ├── PaymentFacade.js              # Payment facade (Facade pattern)
+│   │   └── PaymentService.js
 │   ├── tests/
-│   │   └── booking.test.js        # Unit tests (10 tests)
-│   └── server.js                  # Entry point
+│   │   └── booking.test.js               # Unit tests (Mocha + Chai + Sinon)
+│   ├── utils/
+│   │   └── NotificationFactory.js        # Notification factory (Factory pattern)
+│   └── server.js                         # Entry point
 ├── frontend/
+│   ├── public/
+│   │   └── index.html
 │   └── src/
-│       ├── pages/
-│       │   ├── bookings.jsx        # Create booking page
-│       │   ├── MyBooking.jsx       # View & cancel bookings
-│       │   └── AdminBooking.jsx    # Admin management page
 │       ├── components/
-│       │   └── Navbar.jsx          # Navigation bar
-│       └── context/
-│           └── AuthContext.js      # User authentication state
-└── .github/
-    └── workflows/
-        └── ci.yml                  # GitHub Actions CI/CD pipeline
+│       │   ├── Navbar.jsx                # Navigation bar
+│       │   └── PaymentForm.jsx           # Payment form component
+│       ├── context/
+│       │   └── AuthContext.js            # User authentication state
+│       ├── images/
+│       │   └── background.png
+│       ├── pages/
+│       │   ├── AdminBooking.jsx          # Admin management page
+│       │   ├── bookings.jsx              # Create booking page
+│       │   ├── Login.jsx                 # Login page
+│       │   ├── MyBooking.jsx             # View & cancel bookings
+│       │   ├── Notifications.jsx         # Notifications page
+│       │   ├── Payment.jsx               # Payment page
+│       │   ├── PaymentMethodSettings.jsx # Payment method management
+│       │   ├── PaymentSuccess.jsx        # Payment success page
+│       │   ├── Profile.jsx               # User profile page
+│       │   └── Register.jsx              # Register page
+│       ├── App.js                        # Main app component
+│       └── axiosConfig.jsx               # Axios configuration
+└── README.md
 ```
 
 ---
@@ -124,7 +168,7 @@ Make sure you have these installed:
 
 ### Step 1 — Clone the repository
 ```bash
-git clone https://github.com/MatthewMyspace/laundry-booking-service.git
+git clone https://github.com/LaundryBooking-Team/laundry-booking-service.git
 cd laundry-booking-service
 ```
 
@@ -164,17 +208,6 @@ cd backend
 npm test
 ```
 
-**Expected result:**
-```
-10 passing (5ms)
-```
-
-Tests cover all 4 CRUD operations:
-- ✅ createBooking (2 tests)
-- ✅ getBookings (2 tests)
-- ✅ updateBooking (3 tests)
-- ✅ deleteBooking (3 tests)
-
 ---
 
 ## 🚀 CI/CD Pipeline
@@ -182,7 +215,6 @@ Tests cover all 4 CRUD operations:
 This project uses **GitHub Actions** with a **self-hosted runner on AWS EC2**.
 
 Every time code is pushed to the `main` branch, the pipeline automatically:
-
 1. Checks out the latest code
 2. Sets up Node.js environment
 3. Installs backend and frontend dependencies
@@ -192,9 +224,13 @@ Every time code is pushed to the `main` branch, the pipeline automatically:
 
 ---
 
-## 👤 Author
+## 👥 Team
 
-**Watcharapong Mahamonton**  
-Student ID: N11937483  
-Queensland University of Technology (QUT)  
+| Name | Student ID | Role |
+|------|-----------|------|
+| Watcharapong Mahamonton | N11937483 | Tech Lead / Overall project management / Payment method implementation |
+| Elle Koedduang | N12232327 | Notification system / SRS documentation / API Testing / UI improvements |
+| Jaejun Lee | N12218278 | Jira / Documentation / OOP implementation / Design patterns |
+
+**Queensland University of Technology (QUT)**
 IFN636 — Software Life Cycle Management
